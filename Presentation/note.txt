@@ -1,0 +1,7 @@
+transaction in ef core, sql server, database
+rollback, save
+2 transaciton cung luc, 1 cai vao truoc
+
+ly luan co so, gioi thieu cong conghe
+vi du simple
+ap dung vao project 

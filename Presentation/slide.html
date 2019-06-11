@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Title</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="highlight/styles/dracula.css">
+  <script src="highlight/highlight.pack.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad();
+  </script>
+  <style>
+    @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+    @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+    @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+    body {
+      font-family: 'Droid Serif';
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: 'Yanone Kaffeesatz';
+      font-weight: normal;
+    }
+
+    .class {
+      color:#4EC9A1
+    }
+
+    .interface{
+      color: #B8D7A3
+    }
+
+    .remark-code,
+    .remark-inline-code {
+      color: white;
+      font-family: 'Ubuntu Mono';
+    }
+  </style>
+  <script>
+    const slideUrl = {
+      '1': 'http://localhost:5000/api/user',
+      '2': 'http://localhost:5000/api/user/8ad3aefb-5e3b-41ee-8db1-a430bf4fd7ab',
+      '3': 'http://localhost:5000/api/user/compiledquery/8ad3aefb-5e3b-41ee-8db1-a430bf4fd7ab'
+    };
+
+    function request(slide) {
+      let t0 = performance.now();
+      fetch(slideUrl[slide])
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (myJson) {
+          console.log(0);
+          let result = JSON.stringify(myJson);
+          console.log(result);
+          let t1 = performance.now();
+          document.getElementById("result" + slide).textContent = result;
+          document.getElementById("time" + slide).textContent = "time taken: " + (t1 - t0) + " milliseconds.";
+        });
+    }
+  </script>
+</head>
+
+<body>
+  <textarea id="source">
+
+class: center, middle
+
+# Simple Get All User
+
+<button onclick="request('1')">Get all user</button>
+.left[
+<pre><code class="csharp" style="background-color:darkslategray;color:white" >.interface[IQueryable] &lt;.class[User]&gt; query = this.context.Users;
+return this.mapper.Map &lt;.class[List]&lt;.class[UserDto]&gt;&gt; (query.ToList());
+</code></pre>
+]
+<text id="result1">result:</text>
+<br/>
+<text id="time1">time taken:</text>
+---
+
+class: center, middle
+
+# Simple Get User By Id
+
+<button onclick="request('2')">Get user</button>
+.left[
+<pre><code class="csharp" style="background-color:darkslategray;color:white" >.interface[IQueryable] &lt;.class[User]&gt; query = this.context.Users.Where(usr => usr.Id.Equals(id));
+.class[User] user = query.FirstOrDefault();
+return this.mapper.Map&lt;.class[UserDto]&gt;(user);
+</code></pre>
+]
+<text id="result2">result:</text>
+<br/>
+<text id="time2">time taken:</text>
+---
+
+class: center, middle
+
+# Simple Get User By Id With Compiled Linq Query
+
+<button onclick="request('3')">Get user</button>
+.left[
+<pre><code class="csharp" style="background-color:darkslategray;color:white" >
+.class[Func]<.class[TestDbContext], .class[User]> QueryUserById = EF.CompileQuery<TestDbContext, User>(
+    context => context.Users.FirstOrDefault(usr => usr.Id.Equals(id)));
+.class[User] user = QueryUserById(this.context);
+return this.mapper.Map <.class[UserDto]> (user);
+</code></pre>
+]
+<text id="result3">result:</text>
+<br/>
+<text id="time3">time taken:</text>
+---
+
+    </textarea>
+  <script src="remark.js">
+  </script>
+  <script>
+    var slideshow = remark.create();
+  </script>
+</body>
+
+</html>
