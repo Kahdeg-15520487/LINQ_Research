@@ -26,10 +26,10 @@
     }
 
     .class {
-      color:#4EC9A1
+      color: #4EC9A1
     }
 
-    .interface{
+    .interface {
       color: #B8D7A3
     }
 
@@ -41,9 +41,9 @@
   </style>
   <script>
     const slideUrl = {
-      '1': 'http://localhost:5000/api/user',
-      '2': 'http://localhost:5000/api/user/8ad3aefb-5e3b-41ee-8db1-a430bf4fd7ab',
-      '3': 'http://localhost:5000/api/user/compiledquery/8ad3aefb-5e3b-41ee-8db1-a430bf4fd7ab'
+      '1': location.protocol + '//localhost:5000/api/user',
+      '2': location.protocol + '//localhost:5000/api/user/8ad3aefb-5e3b-41ee-8db1-a430bf4fd7ab',
+      '3': location.protocol + '//localhost:5000/api/user/compiledquery/8ad3aefb-5e3b-41ee-8db1-a430bf4fd7ab'
     };
 
     function request(slide) {
