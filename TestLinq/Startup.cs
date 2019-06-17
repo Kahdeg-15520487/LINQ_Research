@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -59,6 +60,12 @@ namespace TestLinq
 
             services.AddCors();
 
+            services.AddHttpsRedirection(options =>
+            {
+                options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
+                options.HttpsPort = 5001;
+            });
+
             services.AddMvc();
 
             services.RegisterAppServices();
@@ -80,6 +87,9 @@ namespace TestLinq
                        .AllowAnyMethod()
                        .AllowAnyHeader().WithExposedHeaders("Pagination-Count", "Pagination-Page", "Pagination-Limit", "Content-Disposition");
             });
+
+            app.UseHttpsRedirection();
+            app.UseHsts();
 
             app.UseMvc();
         }

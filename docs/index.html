@@ -40,10 +40,16 @@
     }
   </style>
   <script>
+
+    const protocol = {
+      'http:' : 'http://localhost:5000',
+      'https:' : 'https://localhost:5001',
+    }
+
     const slideUrl = {
-      '1': location.protocol + '//localhost:5000/api/user',
-      '2': location.protocol + '//localhost:5000/api/user/8ad3aefb-5e3b-41ee-8db1-a430bf4fd7ab',
-      '3': location.protocol + '//localhost:5000/api/user/compiledquery/8ad3aefb-5e3b-41ee-8db1-a430bf4fd7ab'
+      '1': protocol[location.protocol] + '/api/user',
+      '2': protocol[location.protocol] + '/api/user/8ad3aefb-5e3b-41ee-8db1-a430bf4fd7ab',
+      '3': protocol[location.protocol] + '/api/user/compiledquery/8ad3aefb-5e3b-41ee-8db1-a430bf4fd7ab'
     };
 
     function request(slide) {

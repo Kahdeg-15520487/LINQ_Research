@@ -16,9 +16,9 @@ namespace TestLinq
             string assemblyName = typeof(Startup).GetTypeInfo().Assembly.FullName;
 
             return WebHost.CreateDefaultBuilder(args)
-                        .UseUrls("http://*:5000")
+                        .UseUrls("http://*:5000", "https://*:5001")
                         .UseStartup<Startup>();
         }
-        
+
     }
 }
