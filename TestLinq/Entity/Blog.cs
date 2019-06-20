@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TestLinq.Entity
 {
-    class Blog
+    public class Blog
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

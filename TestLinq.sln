@@ -5,7 +5,11 @@ VisualStudioVersion = 15.0.28307.572
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestLinq", "TestLinq\TestLinq.csproj", "{65334988-D9B8-416F-B960-E92594948418}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestLinqHospital", "TestLinqHospital\TestLinqHospital.csproj", "{C6383F51-59F6-47DC-B278-3F285671E4BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestLinqHospital", "TestLinqHospital\TestLinqHospital.csproj", "{C6383F51-59F6-47DC-B278-3F285671E4BD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestNorthwind", "TestNorthwind\TestNorthwind.csproj", "{D16D727D-83CA-4327-93E2-90CABD409EF7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChessServer", "ChessServer\ChessServer.csproj", "{E8E93A8A-A6A2-46BF-B4AA-455F6C31F529}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{C6383F51-59F6-47DC-B278-3F285671E4BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6383F51-59F6-47DC-B278-3F285671E4BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6383F51-59F6-47DC-B278-3F285671E4BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D16D727D-83CA-4327-93E2-90CABD409EF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D16D727D-83CA-4327-93E2-90CABD409EF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D16D727D-83CA-4327-93E2-90CABD409EF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D16D727D-83CA-4327-93E2-90CABD409EF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8E93A8A-A6A2-46BF-B4AA-455F6C31F529}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8E93A8A-A6A2-46BF-B4AA-455F6C31F529}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8E93A8A-A6A2-46BF-B4AA-455F6C31F529}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8E93A8A-A6A2-46BF-B4AA-455F6C31F529}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -13,5 +13,6 @@ namespace TestLinq.Contract
         UserDto GetLinq(Guid id);
         UserDto GetRawSql(Guid id);
         UserDto GetStoredProcedure(Guid id);
+        UserDto Create(UserDto user);
     }
 }

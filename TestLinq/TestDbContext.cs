@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace TestLinq
 {
-    class TestDbContext : DbContext
+    public class TestDbContext : DbContext
     {
         public TestDbContext(DbContextOptions<TestDbContext> options)
             : base(options)
@@ -31,6 +31,10 @@ namespace TestLinq
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>().Property(u => u.Id).HasDefaultValueSql("NEWID()");
+            modelBuilder.Entity<Blog>().Property(b => b.Id).HasDefaultValueSql("NEWID()");
+            modelBuilder.Entity<Post>().Property(p => p.Id).HasDefaultValueSql("NEWID()");
+
             Guid userId = Guid.NewGuid();
             Guid blogId = Guid.NewGuid();
             modelBuilder.Entity<User>().HasData(new User
@@ -53,10 +57,39 @@ namespace TestLinq
                 BlogId = blogId,
                 Content = "Cac chau oi ..."
             });
+
+            modelBuilder.Entity<Customer>().HasData(
+                new Customer[]
+                {
+                    new Customer
+                    {
+                        Id=1,
+                        Name="Molly",
+                        Address="W Smithfield, London EC1A 7BE",
+                        City="London"
+                    },
+                    new Customer
+                    {
+                        Id=2,
+                        Name="Sherlock",
+                        Address="221b Baker St",
+                        City="London"
+                    },
+                    new Customer
+                    {
+                        Id=3,
+                        Name="Mycroft",
+                        Address="10 Downing St",
+                        City="London"
+                    },
+                }
+                );
         }
 
         public DbSet<User> Users { get; set; }
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<Post> Posts { get; set; }
+
+        public DbSet<Customer> Customers { get; set; }
     }
 }

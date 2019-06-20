@@ -22,7 +22,8 @@ namespace TestLinq.Migrations
             modelBuilder.Entity("TestLinq.Entity.Blog", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<string>("Name");
 
@@ -37,16 +38,57 @@ namespace TestLinq.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("a3d53120-e90b-49d6-8852-38d90c9097d6"),
+                            Id = new Guid("f5ef9c59-7271-4578-8509-f083e07c41b1"),
                             Name = "batanvlog",
-                            UserId = new Guid("bcbadee2-df4b-457f-b294-6b3c8746b4e1")
+                            UserId = new Guid("05fc2fca-6e54-49df-bd33-74fbf5ebcd25")
+                        });
+                });
+
+            modelBuilder.Entity("TestLinq.Entity.Customer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Address");
+
+                    b.Property<string>("City");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Customers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Address = "W Smithfield, London EC1A 7BE",
+                            City = "London",
+                            Name = "Molly"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Address = "221b Baker St",
+                            City = "London",
+                            Name = "Sherlock"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Address = "10 Downing St",
+                            City = "London",
+                            Name = "Mycroft"
                         });
                 });
 
             modelBuilder.Entity("TestLinq.Entity.Post", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<Guid>("BlogId");
 
@@ -63,8 +105,8 @@ namespace TestLinq.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("969cbbfe-6ae5-47de-abec-e363a2dd9bc1"),
-                            BlogId = new Guid("a3d53120-e90b-49d6-8852-38d90c9097d6"),
+                            Id = new Guid("4081a340-75e6-4d8b-a78f-879ce15bcaf6"),
+                            BlogId = new Guid("f5ef9c59-7271-4578-8509-f083e07c41b1"),
                             Content = "Cac chau oi ...",
                             Name = "100 canh ga chien nuoc mam"
                         });
@@ -73,7 +115,8 @@ namespace TestLinq.Migrations
             modelBuilder.Entity("TestLinq.Entity.User", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<string>("Name");
 
@@ -84,7 +127,7 @@ namespace TestLinq.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("bcbadee2-df4b-457f-b294-6b3c8746b4e1"),
+                            Id = new Guid("05fc2fca-6e54-49df-bd33-74fbf5ebcd25"),
                             Name = "batan"
                         });
                 });

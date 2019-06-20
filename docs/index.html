@@ -6,6 +6,7 @@
   <meta charset="utf-8">
   <link rel="stylesheet" href="highlight/styles/dracula.css">
   <script src="highlight/highlight.pack.js"></script>
+  <script type="text/javascript" src="renderjson.js"></script>
   <script>
     hljs.initHighlightingOnLoad();
   </script>
@@ -25,6 +26,12 @@
       font-weight: normal;
     }
 
+    table,
+    th,
+    td {
+      border: 1px solid black;
+    }
+
     .class {
       color: #4EC9A1
     }
@@ -33,26 +40,79 @@
       color: #B8D7A3
     }
 
+    .empha {
+      color: red
+    }
+
+    .small-text {
+      font-size: 16px
+    }
+
+    .small-image img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .hide {
+      display: none;
+    }
+
     .remark-code,
     .remark-inline-code {
       color: white;
       font-family: 'Ubuntu Mono';
     }
+
+    .hljs-string {
+      color: #D0967E;
+    }
   </style>
   <script>
-
+    document.addEventListener("DOMContentLoaded", function (event) {
+      let linq_collab = document.getElementById("linq-collabsible");
+      renderjson.set_show_to_level(3);
+      linq_collab.appendChild(
+        renderjson([{
+            'id': 0,
+            'name': 'Molly',
+            'address': 'W Smithfield, London EC1A 7BE',
+            'city': 'London'
+          },
+          {
+            'id': 1,
+            'name': 'Sherlock',
+            'address': '221b Baker St',
+            'city': 'London'
+          },
+          {
+            'id': 2,
+            'name': 'Mycroft',
+            'address': '10 Downing St',
+            'city': 'London'
+          },
+        ])
+      );
+      renderjson.set_show_to_level(1);
+      console.log(linq_collab);
+    });
+  </script>
+  <script>
     const protocol = {
-      'http:' : 'http://localhost:5000',
-      'https:' : 'https://localhost:5001',
+      'http:': 'http://localhost:5000',
+      'https:': 'https://localhost:5001',
     }
 
     const slideUrl = {
       '1': protocol[location.protocol] + '/api/user',
       '2': protocol[location.protocol] + '/api/user/8ad3aefb-5e3b-41ee-8db1-a430bf4fd7ab',
-      '3': protocol[location.protocol] + '/api/user/compiledquery/8ad3aefb-5e3b-41ee-8db1-a430bf4fd7ab'
+      '3': protocol[location.protocol] + '/api/user/compiledquery/8ad3aefb-5e3b-41ee-8db1-a430bf4fd7ab',
+      '4': protocol[location.protocol] + '/api/value',
+      '5': protocol[location.protocol] + '/api/customer/query1',
+      '6': protocol[location.protocol] + '/api/customer/query2'
     };
 
     function request(slide) {
+      console.log(slide);
       let t0 = performance.now();
       fetch(slideUrl[slide])
         .then(function (response) {
@@ -63,7 +123,11 @@
           let result = JSON.stringify(myJson);
           console.log(result);
           let t1 = performance.now();
-          document.getElementById("result" + slide).textContent = result;
+          let resultDisplay = document.getElementById("result" + slide);
+          while (resultDisplay.firstChild) {
+            resultDisplay.removeChild(resultDisplay.firstChild);
+          }
+          resultDisplay.appendChild(renderjson(myJson));
           document.getElementById("time" + slide).textContent = "time taken: " + (t1 - t0) + " milliseconds.";
         });
     }
@@ -74,6 +138,560 @@
   <textarea id="source">
 
 class: center, middle
+
+# .empha[LINQ] - .empha[L]anguage-.empha[In]tegrated .empha[Q]uery
+---
+
+class: left
+
+# I. Introduction
+
+LINQ is an acronym for Language Integrated Query. It is pronounced
+"link" with a "k". You may sometimes hear it pronounced "lin-queue" but that is
+incorrect.
+---
+
+class: left
+
+# I. Introduction
+
+LINQ is an acronym for Language Integrated Query. It is pronounced
+"link" with a "k". You may sometimes hear it pronounced "lin-queue" but that is
+incorrect.
+
+LINQ introduces querying into the C# language as a first-class citizen.
+The compiler type checks LINQ queries. Inside Visual Studio LINQ queries
+are syntax-highlighted and IntelliSense-aware. They provide developers
+with a strongly typed, logically structured syntax for querying data.
+---
+
+class: left
+
+# I.1 Before LINQ
+
+Before LINQ there was no single native syntax for querying data in the
+C# language.
+---
+
+class: left
+
+# I.1 Before LINQ
+
+Before LINQ there was no single native syntax for querying data in the
+C# language.
+
+There were tools for branching and looping, tools for writing
+object-oriented code, even tools for creating delegates or serializing data.
+But there was no single, standardized tool to query multiple data sources.
+
+---
+
+class: left
+
+# I.1 Before LINQ
+
+Before LINQ there was no single native syntax for querying data in the
+C# language.
+
+There were tools for branching and looping, tools for writing
+object-oriented code, even tools for creating delegates or serializing data.
+But there was no single, standardized tool to query multiple data sources.
+
+E.g:<pre><code class="csharp" style="background-color:darkslategray;color:white" >
+    .class[SqlConnection] conn = new .class[SqlConnection]("...");
+    .class[SqlCommand] cmd = conn.CreateCommand();
+    cmd.CommandText = @"SELECT *
+                        FROM Customer
+                        WHERE City = @CityParam";
+    cmd.Parameters.Add("@CityParam", "Paris");
+    .class[SqlDataReader] r = cmd.ExecuteReader();
+    while ( r.HasRows )
+    {
+      .class[Console].WriteLine(r["Address"] + r["City"]);
+    }
+    </code></pre>
+---
+
+class: left
+
+# I.2 The LINQ era
+
+The introduction of LINQ is one of the biggest changes in the C# world
+since the inception of the language. This feature is so prevalent and 
+necessary that Java also added Stream to enable easier working with
+multiple data source.
+
+In short, you can use LINQ’s SQL-like syntax to query SQLdatabases, XMLfiles,
+or generic data structures such as lists and queues.
+---
+
+class: left
+
+# I.2 The LINQ era
+
+The introduction of LINQ is one of the biggest changes in the C# world
+since the inception of the language. This feature is so prevalent and 
+necessary that Java also added Stream to enable easier working with
+multiple data source.
+
+In short, you can use LINQ’s SQL-like syntax to query SQLdatabases, XMLfiles,
+or generic data structures such as lists and queues.
+
+E.g:<pre><code class="csharp" style="background-color:darkslategray;color:white" >
+    .class[Northwind] db = new .class[Northwind](connectString);		
+	.interface[IQueryable] <.class[Customer]> query = db.Customers.Where(cust=>cust.City == "Paris");
+    foreach(var cust in query)
+    {
+      .class[Console].WriteLine(cust.Address + cust.City);
+    }
+    </code></pre>
+---
+
+class: left
+
+# II. LINQ's definitive feature
+
+---
+name: definitive
+class: left
+
+# II. LINQ's definitive feature
+
+LINQ is
+
+• [Integrated](#Integrated)
+
+• [Unitive](#Unitive)
+
+• [Extensible](#Extensible)
+
+• [Declarative](#Declarative)
+
+• [Hierarchical](#Hierarchical)
+
+• [Composable](#Composable)
+
+• [Transformative](#Transformative)
+
+---
+name: Integrated
+class: left
+
+.right[[back](#definitive)]
+
+# II.1 LINQ is Integrated:
+Before LINQ, Developers have many tools that have been crafted to neatly solve difficult tasks.
+Those tools is not native to either C# nor .NET. As a result, SQL code embedded in a C# program
+is neither type-checked nor IntelliSense-aware. From the perspective of a C# developer, SQL is
+shrouded in darkness.
+
+---
+
+class: left
+
+.right[[back](#definitive)]
+
+# II.1 LINQ is Integrated:
+Before LINQ, Developers have many tools that have been crafted to neatly solve difficult tasks.
+Those tools is not native to either C# nor .NET. As a result, SQL code embedded in a C# program
+is neither type-checked nor IntelliSense-aware. From the perspective of a C# developer, SQL is
+shrouded in darkness.
+<pre><code class="csharp" style="background-color:darkslategray;color:white" >    .class[SqlConnection] conn = new .class[SqlConnection]("...");
+    .class[SqlCommand] cmd = conn.CreateCommand();
+    cmd.CommandText = @"SELECT * FROM Customer WHERE City = @CityParam";
+    cmd.Parameters.Add("@CityParam", "Paris");
+    .class[SqlDataReader] r = cmd.ExecuteReader();
+    while ( r.HasRows )
+    {
+      .class[Console].WriteLine(r["Address"] + r["City"]);
+    }
+</code></pre>
+---
+
+class: left
+
+.right[[back](#definitive)]
+
+# II.1 LINQ is Integrated:
+<pre><code class="csharp" style="background-color:darkslategray;color:white" >    .class[SqlConnection] conn = new .class[SqlConnection]("...");
+    .class[SqlCommand] cmd = conn.CreateCommand();
+    cmd.CommandText = @"SELECT * FROM Customer WHERE City = @CityParam";
+    cmd.Parameters.Add("@CityParam", "Paris");
+    .class[SqlDataReader] r = cmd.ExecuteReader();
+    while ( r.HasRows )
+    {
+      .class[Console].WriteLine(r["Address"] + r["City"]);
+    }
+</code></pre>
+Of these lines of code, only two directly define the query. After executing the query,
+developer still has to convert the returned data, which is a table, into a format that is addresable in an OOP manner.
+---
+
+class: left
+
+.right[[back](#definitive)]
+
+# II.1 LINQ is Integrated:
+Through LINQ, query is now a first-class citizen of C#, with extensive compiler and IntelliSense support.
+<pre><code class="csharp" style="background-color:darkslategray;color:white" >    .class[Northwind] db = new .class[Northwind](connectString);		
+	.interface[IQueryable] <.class[Customer]> query = db.Customers.Where(cust=>cust.City == "Paris");
+    foreach(var cust in query)
+    {
+      .class[Console].WriteLine(cust.Address + cust.City);
+    }
+</code></pre>
+---
+name: Unitive
+class: left
+
+.right[[back](#definitive)]
+
+# II.2 LINQ is Unitive:
+A single, uni-tive syntax can be used to query diverse types of data.
+---
+
+class: left
+
+.right[[back](#definitive)]
+
+# II.2 LINQ is Unitive:
+A single, uni-tive syntax can be used to query diverse types of data.  
+You can use either kind of LINQ syntax:
+
+SQl-like syntax:
+<pre><code class="csharp" style="background-color:darkslategray;color:white" >
+    var query = from cust in db.Customers
+                where cust.City == "Paris"
+                select new {cust.Address, cust.City};
+</code></pre>
+---
+
+class: left
+
+.right[[back](#definitive)]
+
+# II.2 LINQ is Unitive:
+A single, uni-tive syntax can be used to query diverse types of data.
+You can use either kind of LINQ syntax:
+
+SQl-like syntax:
+<pre><code class="csharp" style="background-color:darkslategray;color:white" >
+    var query = from cust in db.Customers
+                where cust.City == "Paris"
+                select new {cust.Address, cust.City};
+</code></pre>
+Method chaining:
+<pre><code class="csharp" style="background-color:darkslategray;color:white" >
+    var query = db.Customers.Where(cust=>cust.City == "Paris")
+                            .Select(new {cust.Address, cust.City});
+</code></pre>
+---
+name: Extensible
+class: left
+
+.right[[back](#definitive)]
+
+# II.3 LINQ is Extensible:
+LINQ operate based on a series of feature added in C# 2.0 and 3.0.
+---
+
+class: left
+
+.right[[back](#definitive)]
+
+# II.3 LINQ is Extensible:
+LINQ operate based on a series of feature added in C# 2.0 and 3.0.  
+
+• lambdas expression  
+  cust=>cust.City == "Paris"
+
+• iterator blocks  
+  yield return
+
+• expression trees  
+
+• anonymous types  
+  new { id=0, name="Jane" }
+
+• type inference  
+
+• query expressions  
+from n in list
+select n
+
+• extension methods
+---
+
+class: left
+
+.right[[back](#definitive)]
+
+# II.3 LINQ is Extensible:
+LINQ operate based on a series of feature added in C# 2.0 and 3.0:  
+• lambdas expression  
+• iterator blocks  
+• expression trees  
+• anonymous types  
+• type inference  
+• query expressions  
+• extension methods  
+Thus, LINQ is not designed to query any particular data source; rather,
+it is a technology for defining providers that can be used to access any arbitrary data source.
+---
+
+class: left
+
+.right[[back](#definitive)]
+
+# II.3 LINQ is Extensible:
+![linq_architecture](images/linq_architecture.png)
+---
+name: Declarative
+class: left
+
+.right[[back](#definitive)]
+
+# II.4 LINQ is Declarative: (Not HOW but WHAT)
+LINQ is declarative, not imperative.  
+Which mean through LINQ, the developer can state "what" they want to do,
+not necessarily "how" they want it to be done.
+---
+
+class: left
+
+.right[[back](#definitive)]
+
+# II.4 LINQ is Declarative: (Not HOW but WHAT)
+LINQ is declarative, not imperative.  
+Which mean through LINQ, the developer can state "what" they want to do,
+not necessarily "how" they want it to be done.  
+
+By only stating the "what", the developer let the compiler figure out
+the best way to do it. Detailed instructions not only place a burden on the developer, but also
+restrict the compiler’s capability to optimize code.
+---
+
+class: left
+
+.right[[back](#definitive)]
+
+# II.4 LINQ is Declarative: (Not HOW but WHAT)
+Given a .class[List]<.class[List]<.class[int]>> lists. We want to flatten it into a simle .class[List]<.class[int]>.
+---
+
+class: left
+
+.right[[back](#definitive)]
+
+# II.4 LINQ is Declarative: (Not HOW but WHAT)
+Given a .class[List]<.class[List]<.class[int]>> lists. We want to flatten it into a simle .class[List]<.class[int]>.  
+Imperative style:
+<pre><code class="csharp" style="background-color:darkslategray;color:white" >    .class[List]<.class[int]> newList = new .class[List]<.class[int]>();
+    foreach( var item in lists){
+      newList.Add(item);
+    }
+</code></pre>
+---
+
+class: left
+
+.right[[back](#definitive)]
+
+# II.4 LINQ is Declarative: (Not HOW but WHAT)
+Given a .class[List]<.class[List]<.class[int]>> lists. We want to flatten it into a simle .class[List]<.class[int]>.  
+Imperative style:
+<pre><code class="csharp" style="background-color:darkslategray;color:white" >    .class[List]<.class[int]> newList = new .class[List]<.class[int]>();
+    foreach( var item in lists){
+      newList.Add(item);
+    }
+</code></pre>
+Declarative style:
+<pre><code class="csharp" style="background-color:darkslategray;color:white" >    .interface[Ienumerable]<.class[int]> query = from list in lists
+                             from item in list
+                             select num;
+    .class[List]<.class[int]> newList = query.ToList();
+</code></pre>
+---
+name: Hierarchical
+class: left
+
+.right[[back](#definitive)]
+
+# II.5 LINQ is Hierarchical:
+Complex relationships can be expressed in a relational database, but the
+results of a SQL query can take only one shape: a rectangular grid, a join that 
+binds the tables into a single array of columns and rows, a flat data structure.
+---
+
+class: left
+
+.right[[back](#definitive)]
+
+# II.5 LINQ is Hierarchical:
+Complex relationships can be expressed in a relational database, but the
+results of a SQL query can take only one shape: a rectangular grid, a join that 
+binds the tables into a single array of columns and rows, a flat data structure.  
+<pre><code class="csharp" style="background-color:darkslategray;color:white" >    .class[SqlConnection] conn = new .class[SqlConnection]("...");
+    .class[SqlCommand] cmd = conn.CreateCommand();
+    cmd.CommandText = @"SELECT * FROM Customer";
+    .class[SqlDataReader] r = cmd.ExecuteReader();
+</code></pre>
+Returned data:
+
+|Id | Name | Address | City |
+|---|---|---|---|
+|0|Molly|W Smithfield, London EC1A 7BE|London|
+|1|Sherlock|221b Baker St|London|
+|2|Mycroft|10 Downing St|London|
+
+---
+
+class: left
+
+.right[[back](#definitive)]
+
+# II.5 LINQ is Hierarchical:
+Using LINQ:
+<pre><code class="csharp" style="background-color:darkslategray;color:white" >	.class[List]<.class[Customer]> query = db.Customers.ToList();
+</code></pre>
+Returned data:
+<div id="linq-collabsible" class="small-text"></div>
+
+---
+name: Composable
+class: left
+
+.right[[back](#definitive)]
+
+# II.6 LINQ is Composable:
+LINQ queries are composable: You can combine them in multiple ways,
+and one query can be used as the building block for yet another query.
+---
+
+class: left
+
+.right[[back](#definitive)]
+
+# II.6 LINQ is Composable:
+LINQ queries are composable: You can combine them in multiple ways,
+and one query can be used as the building block for yet another query.
+<pre><code class="csharp" style="background-color:darkslategray;color:white" >  .interface[IQueryable]<.class[Customer]> query = db.Customers.Where(cust=>cust.City == "London");
+</code></pre>
+<button onclick="request('5')">Get</button>
+<text id="result5">result:</text><br/>
+---
+
+class: left
+
+.right[[back](#definitive)]
+
+# II.6 LINQ is Composable:
+LINQ queries are composable: You can combine them in multiple ways,
+and one query can be used as the building block for yet another query.
+<pre><code class="csharp" style="background-color:darkslategray;color:white" >  .interface[IQueryable]<.class[Customer]> query = db.Customers.Where(cust=>cust.City == "London");
+</code></pre>
+The returned query can then be composed with another query.
+<pre><code class="csharp" style="background-color:darkslategray;color:white" >  .interface[IQueryable]<.class[Customer]> query2 = db.Customers.Where(cust=>cust.Address.StartsWith("221b"));
+</code></pre>
+<button onclick="request('6')">Get</button>
+<text id="result6">result:</text>
+---
+
+class: left
+
+.right[[back](#definitive)]
+
+# II.6 LINQ is Composable:
+
+This is a simple mechanism to understand, but it yields powerful results.
+.small-image[
+  ![simple](images/simple.png)
+]
+---
+
+class: left
+
+.right[[back](#definitive)]
+
+# II.6 LINQ is Composable:
+
+This is a simple mechanism to understand, but it yields powerful results.  
+It allows you, the developer, to take complex problems, break them into manageable pieces,
+and solve them with code that is easy to understand and easy to maintain.  
+It also enable a feature called .empha[deferred execution].  
+You can "execute" several queries
+without ever sending a query to your database. Then, when you need to access the result
+from your query, a SQL statement is written that combines the results of all your queries.
+---
+name: Transformative
+class: left
+
+.right[[back](#definitive)]
+
+# II.7 LINQ is Transformative:
+Before LINQ, for the task of transforming a set of data from database into another data
+format like JSON or XML, you need to use 3 separate tool: one to get the data from the db,
+one to parse that data into an internal format(object for example) and one to write that data
+into the other format.
+
+---
+
+class: left
+
+.right[[back](#definitive)]
+
+# II.7 LINQ is Transformative:
+Before LINQ, for the task of transforming a set of data from database into another data
+format like JSON or XML, you need to use 3 separate tool: one to get the data from the db,
+one to parse that data into an internal format(object for example) and one to write that data
+into the other format.  
+Now, you can just use LINQ, with the necessary LINQ provider of course, to do said task, and
+you can do it with just one query.
+<pre><code class="csharp" style="background-color:darkslategray;color:white">    var query = 
+      new .class[XElement]("Order",
+                  db.Customers.Where(cust=>cust.City == "Paris")
+                  .Select(cust=> new .class[XElement]("Order",
+                        new .class[XAttribute]("Address", cust.Address),
+                        new .class[XAttribute]("City", cust.City))));
+</code></pre>
+Embedded in this query is a simple LINQ to SQL query that returns the
+Address and City fields from all the customers who live in Paris.
+---
+
+class: left
+
+.right[[back](#definitive)]
+
+# II.7 LINQ is Transformative:
+
+LINQ is constantly transforming one type of data into another type. It takes relational
+data and transforms it into objects; it takes XML and transforms it into relational data.
+
+Because LINQ is extensible, it is at least theoretically possible to use it to tear down
+the walls that separate any two arbitrary data domains.
+---
+
+class: center, middle
+
+# III. Some simple example
+
+---
+
+class: left
+
+# III.1 Simple Get with no database
+
+<button onclick="request('4')">Get empty user</button>
+.left[
+<pre><code class="csharp" style="background-color:darkslategray;color:white" >return new .class[UserDto]();
+</code></pre>
+]
+<text id="result4">result:</text>
+<br/>
+<text id="time4">time taken:</text>
+---
+
+class: left
 
 # Simple Get All User
 
@@ -88,7 +706,7 @@ return this.mapper.Map &lt;.class[List]&lt;.class[UserDto]&gt;&gt; (query.ToList
 <text id="time1">time taken:</text>
 ---
 
-class: center, middle
+class: left
 
 # Simple Get User By Id
 
@@ -104,7 +722,7 @@ return this.mapper.Map&lt;.class[UserDto]&gt;(user);
 <text id="time2">time taken:</text>
 ---
 
-class: center, middle
+class: left
 
 # Simple Get User By Id With Compiled Linq Query
 
@@ -121,6 +739,16 @@ return this.mapper.Map <.class[UserDto]> (user);
 <br/>
 <text id="time3">time taken:</text>
 ---
+
+class: center, middle
+
+# QA Time!
+
+---
+
+class: center, middle
+
+# The End
 
     </textarea>
   <script src="remark.js">

@@ -1,7 +1,152 @@
 transaction in ef core, sql server, database
 rollback, save
-2 transaciton cung luc, 1 cai vao truoc
+2 transaction cung luc, 1 cai vao truoc
 
 ly luan co so, gioi thieu cong conghe
 vi du simple
 ap dung vao project 
+
+I. Introduction:
+
+	LINQ is an acronym for Language Integrated Query. It is pronounced
+"link" with a "k" You may sometimes hear it pronounced "lin-queue" but that is
+incorrect.
+
+	LINQ introduces querying into the C# language as a first-class citizen.
+The compiler type checks LINQ queries. Inside Visual Studio LINQ queries
+are syntax-highlighted and IntelliSense-aware. They provide developers
+with a strongly typed, logically structured syntax for querying data.
+
+	Before LINQ there was no single native syntax for querying data in the
+C# language. There were tools for branching and looping, tools for writing
+object-oriented code, even tools for creating delegates or serializing data.
+But there was no single, standardized tool to query multiple data sources.
+    E.g:
+    SqlConnection conn = new SqlConnection(“...);
+    SqlCommand cmd = conn.CreateCommand();
+    cmd.CommandText = @"SELECT *
+                        FROM Vehicles
+                        WHERE Model = @Model";
+
+    cmd.Parameters.Add("@Model", “Mazda 3“);
+    SqlDataReader r = cmd.ExecuteReader();
+    while ( r.HasRows )
+    {
+        Console.WriteLine(r[“Number"] + r[“Year"]);
+    }
+
+	The introduction of LINQ is one of the biggest changes in the C# world
+since the inception of the language. This feature is so prevalent and 
+necessary that Java also added Stream to enable easier working with
+multiple data source.
+
+	In short, you can use LINQ’s SQL-like syntax to query SQLdatabases, XMLfiles,
+or generic data structures such as lists and queues.
+
+II. LINQ's definitive feature:
+
+LINQ is
+• Integrated
+• Unitive
+• Extensible
+• Declarative
+• Hierarchical
+• Composable
+• Transformative
+
+• Integrated :
+				Before LINQ, Developers have many tools that have been crafted to neatly solve difficult tasks.
+				Those tools is not native to either C# nor .NET. As a result, SQL code embedded in a C# program
+				is neither type-checked nor IntelliSense-aware. From the perspective of a C# developer, SQL is
+				shrouded in darkness.
+				E.g:
+					SqlConnection sqlConnection = new SqlConnection(connectString);
+					sqlConnection.Open();
+
+					System.Data.SqlClient.SqlCommand sqlCommand = new SqlCommand();
+					sqlCommand.Connection = sqlConnection;
+
+					sqlCommand.CommandText = “Select * from Customer Where City = 'Paris'";
+
+					var queryResult = sqlCommand.ExecuteReader (CommandBehavior.CloseConnection)
+				
+				Of these six lines of code, only the last two directly define a query. After executing the query,
+				developer still has to convert the data returned to a format that is addresable in an OOP manner.
+				
+				Through LINQ, query is now a first-class citizen of C#, with extensive compiler and IntelliSense support.
+				E.g:
+					Northwind db = new Northwind(connectString);
+					
+					IQueryable<Customer> query = db.Customers.Where(cust=>cust.City == "Paris");
+				
+• Unitive: 
+				A single, uni-tive syntax can be used to query diverse types of data.
+				You can use either kind of LINQ syntax: the SQl like one or the method chaining one.
+				E.g:
+					var query = from cust in db.Customers
+								where cust.City == "Paris"
+								select new {cust.Address, cust.City};
+				E.g:
+					var query = db.Customers.Where(cust=>cust.City == "Paris")
+											.Select(new {cust.Address, cust.City});
+											
+				Both return the same query internally and can be used interchangeably.
+			
+• Extensible:
+				LINQ operate based on a series of feature added in C# 2.0 and 3.0 These include lambdas,
+			iterator blocks, expression trees, anonymous types, type inference, query
+			expressions, and extension methods. Thus, LINQ is not designed to query any particular data source; rather,
+			it is a technology for defining providers that can be used to access any arbitrary data source.
+• Declarative: 
+				LINQ is declarative, not imperative. Which mean through LINQ, the developer can state "what" they want to do,
+			not necessarily "how" they want it to be done. By only stating the "what", the developer let the compiler figure out
+			the best way to do it. Detailed instructions not only place a burden on the developer, but also
+			restrict the compiler’s capability to optimize code.
+• Hierarchical: 
+				Complex relationships can be expressed in a relational database, but the
+			results of a SQL query can take only one shape: a rectangular grid, a join that 
+			binds the tables into a single array of columns and rows, a flat data structure.
+			LINQ has no such restrictions and can present the queried data in a hierarchical
+			structure of object which is familiar with OOP language like C#.
+• Composable: 
+				LINQ queries are composable: You can combine them in multiple ways,
+			and one query can be used as the building block for yet another query.
+			E.g:
+				IQueryable<Customer> query = db.Customers.Where(cust=>cust.City == "Paris");
+			The returned query can then be composed with another query.
+			E.g:
+				IQueryable<Customer> query2 = query.Where(cust=>cust.Address.StartsWith("25"));
+			This is a simple mechanism to understand, but it yields powerful results. It
+			allows you to take complex problems, break them into manageable pieces,
+			and solve them with code that is easy to understand and easy to maintain.
+			It also enable a feature called deferred execution. You can "execute" several queries
+			without ever sending a query to your database. Then, when you need to access the result
+			from your query, a SQL statement is written that combines the results of all your queries.
+• Transformative:
+				Before LINQ, for the task of transforming a set of data from database into another data
+			format like JSON or XML, you need to use 3 separate tool: one to get the data from the db,
+			one to parse that data into an internal format(object for example) and one to write that data
+			into the other format.
+			Now, you can just use LINQ, with the necessary LINQ provider of course, to do said task, and
+			you can do it with just one query.
+			E.g:
+				var query = new XElement("Order",
+										 db.Customers.Where(cust=>cust.City == "Paris")
+													 .Select(cust=> new XElement("Order",
+																				 new XAttribute("Address", cust.Address),
+																				 new XAttribute("City", cust.City))));
+			Embedded in this query is a simple LINQ to SQL query that returns the
+			Address and City fields from all the customers who live in Paris.
+			
+			LINQ is constantly transforming one type of data into another type. It takes relational
+			data and transforms it into objects; it takes XMLand transforms it into relational data.
+			Because LINQ is extensible, it is at least theoretically possible to use it to tear down
+			the walls that separate any two arbitrary data domains.
+				
+III. Small example:
+<demo slide>
+
+IV. EF Core footnote:
+<
+	some note related to ef core and LINQ to SQL
+>

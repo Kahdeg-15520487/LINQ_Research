@@ -8,5 +8,6 @@ namespace TestLinq.Contract.Dtos
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
+        public Guid BlogId { get; set; }
     }
 }

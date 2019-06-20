@@ -17,6 +17,12 @@ namespace TestLinq.Controllers
             this.userService = userService;
         }
 
+        [HttpPost]
+        public UserDto Create([FromBody] UserDto user)
+        {
+            return this.userService.Create(user);
+        }
+
         [HttpGet]
         public IEnumerable<UserDto> GetAll()
         {

@@ -69,7 +69,7 @@ namespace TestLinq.AppService
 
         public UserDto GetRawSql(Guid id)
         {
-            var query = this.context.Users.FromSql($"SELECT * FROM dbo.Users WHERE Id = {id}");
+            IQueryable<User> query = this.context.Users.FromSql($"SELECT * FROM dbo.Users WHERE Id = {id}");
 
             this.logger.LogInformation(query.ToSql());
 
@@ -80,13 +80,21 @@ namespace TestLinq.AppService
 
         public UserDto GetStoredProcedure(Guid id)
         {
-            var query = this.context.Users.FromSql($"EXEC GetUserById @id= {id}");
+            IQueryable<User> query = this.context.Users.FromSql($"EXEC GetUserById @id= {id}");
 
             this.logger.LogInformation(query.ToSql());
 
             User user = query.FirstOrDefault();
 
             return this.mapper.Map<UserDto>(user);
+        }
+
+        public UserDto Create(UserDto user)
+        {
+            User newuser = this.mapper.Map<User>(user);
+            UserDto uu = this.mapper.Map<UserDto>(this.context.Users.Add(newuser).Entity);
+            this.context.SaveChanges();
+            return uu;
         }
     }
 }

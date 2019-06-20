@@ -9,6 +9,7 @@ namespace TestLinq.Contract.Dtos
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Content { get; set; }
-        public BlogDto Blog { get; set; }
+        public Guid BlogId { get; set; }
+        public Guid UserId { get; set; }
     }
 }
