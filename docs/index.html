@@ -591,7 +591,7 @@ and one query can be used as the building block for yet another query.
 <pre><code class="csharp" style="background-color:darkslategray;color:white" >  .interface[IQueryable]<.class[Customer]> query = db.Customers.Where(cust=>cust.City == "London");
 </code></pre>
 The returned query can then be composed with another query.
-<pre><code class="csharp" style="background-color:darkslategray;color:white" >  .interface[IQueryable]<.class[Customer]> query2 = db.Customers.Where(cust=>cust.Address.StartsWith("221b"));
+<pre><code class="csharp" style="background-color:darkslategray;color:white" >  .interface[IQueryable]<.class[Customer]> query2 = query.Where(cust=>cust.Address.StartsWith("221b"));
 </code></pre>
 <button onclick="request('6')">Get</button>
 <text id="result6">result:</text>
